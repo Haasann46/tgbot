@@ -4,16 +4,21 @@ from bot.database.db import cursor, conn
 from datetime import datetime
 from bot.handlers.states import IncomeState
 from aiogram.fsm.context import FSMContext
+from aiogram import Router, F
+from aiogram.types import Message
 
 router = Router()
 
+
 @router.message(F.text == "➕ Добавить доход")
-async def add_income(message: Message):
+async def add_income(message: Message, state: FSMContext):
+    await state.clear()  # 🔥 сброс любого старого состояния
+    await state.set_state(IncomeState.amount)  # ✅ СТАВИМ СОСТОЯНИЕ
     await message.answer("💸 Введите сумму доходов:")
 
-@router.message(F.text.regexp(r"^\d+$"))
+
+@router.message(IncomeState.amount)
 async def save_income(message: Message, state: FSMContext):
-    await state.set_state(IncomeState.amount)
     amount = int(message.text)
     user_id = message.from_user.id
 
@@ -23,4 +28,6 @@ async def save_income(message: Message, state: FSMContext):
     )
     conn.commit()
 
-    await message.answer("✅ доход сохранён!")
+    await message.answer("✅ Доход сохранён!")
+    await state.clear()  # ✅ очищаем ПОСЛЕ сохранения
+
