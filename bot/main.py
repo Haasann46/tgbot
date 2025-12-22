@@ -1,8 +1,10 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
-from handlers import start, expense, income, stats, zero, cancel
+from handlers import start, expense, income, stats, zero, cancel, notes
+from bot.database.db import init_db
 
+init_db()
 async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
@@ -13,6 +15,7 @@ async def main():
     dp.include_router(stats.router)
     dp.include_router(zero.router)
     dp.include_router(cancel.router)
+    dp.include_router(notes.router)
 
     await dp.start_polling(bot)
 

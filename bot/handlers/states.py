@@ -5,3 +5,7 @@ class IncomeState(StatesGroup):
 
 class ExpenseState(StatesGroup):
     amount = State()
+
+class NotesState(StatesGroup):
+    text = State()
+    delete_number = State()

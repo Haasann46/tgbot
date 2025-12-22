@@ -3,11 +3,11 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from datetime import datetime
 
-from bot.database.db import cursor, conn
+from bot.database.db import get_connection
 from bot.handlers.states import IncomeState
 from bot.keyboards.reply import cancel_keyboard, main_keyboard
 
-router = Router()  # ❗ ОБЯЗАТЕЛЬНО ДО ДЕКОРАТОРОВ
+router = Router()
 
 
 @router.message(F.text == "➕ Добавить доход")
@@ -25,7 +25,7 @@ async def add_income(message: Message, state: FSMContext):
 
 @router.message(IncomeState.amount)
 async def save_income(message: Message, state: FSMContext):
-    # ⬅ КНОПКА НАЗАД
+    # ⬅ кнопка «Назад»
     if message.text == "⬅ Назад":
         await state.clear()
         await message.answer(
@@ -34,23 +34,30 @@ async def save_income(message: Message, state: FSMContext):
         )
         return
 
-    # ❌ если ввели не число или нажали другую кнопку
+    # ❌ проверка ввода
     if not message.text.isdigit():
         await message.answer(
             "❗ Введите сумму цифрами или нажмите «⬅ Назад»"
         )
         return
 
-    # ✅ корректный ввод
     amount = int(message.text)
     user_id = message.from_user.id
 
+    # работа с БД
+    conn = get_connection()
+    cursor = conn.cursor()
+
     cursor.execute(
-        "INSERT INTO transactions (user_id, amount, type, category, created_at) "
-        "VALUES (?, ?, ?, ?, ?)",
+        """
+        INSERT INTO transactions (user_id, amount, type, category, created_at)
+        VALUES (?, ?, ?, ?, ?)
+        """,
         (user_id, amount, "income", "Другое", datetime.now().isoformat())
     )
+
     conn.commit()
+    conn.close()
 
     await state.clear()
     await message.answer(
