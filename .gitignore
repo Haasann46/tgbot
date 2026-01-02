@@ -1,18 +1,18 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 
-# Virtual environment
+# Virtual env
 venv/
-.env/
+.env
 
-# PyCharm
+# IDE
 .idea/
-
-# Database
-*.db
+.vscode/
 
 # OS
 .DS_Store
-Thumbs.db
+
+# Secrets
+config.py
+.env

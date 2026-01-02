@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Telegram Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body style="background:#0f172a;color:white;font-family:sans-serif">
+  <h2>🚀 Telegram Mini App</h2>
+  <div id="info">Загрузка...</div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ initData: tg.initData })
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById("info").innerText =
+        "✅ Авторизован. Telegram ID: " + data.telegram_id;
+    })
+    .catch(() => {
+      document.getElementById("info").innerText =
+        "❌ Ошибка авторизации";
+    });
+  </script>
+</body>
+</html>

@@ -1,4 +1,7 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
+
+# ⚠️ ВАЖНО: вставь СВОЙ HTTPS от ngrok
+MINI_APP_URL = 'https://jadon-nonamphibian-elmer.ngrok-free.dev/app'
 
 
 main_keyboard = ReplyKeyboardMarkup(
@@ -9,10 +12,13 @@ main_keyboard = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text="📊 Статистика"),
-            KeyboardButton(text="📝 Заметки")
+            KeyboardButton(text="🧾 Заметки")
         ],
         [
-            KeyboardButton(text="Обнулить статистику")
+            KeyboardButton(
+                text="🚀 Mini App",
+                web_app=WebAppInfo(url=MINI_APP_URL)
+            )
         ]
     ],
     resize_keyboard=True
@@ -29,17 +35,10 @@ cancel_keyboard = ReplyKeyboardMarkup(
 
 notes_keyboard = ReplyKeyboardMarkup(
     keyboard=[
-        [
-            KeyboardButton(text="➕ Добавить заметку"),
-            KeyboardButton(text="📋 Посмотреть заметки")
-        ],
-        [
-            KeyboardButton(text="❌ Удалить заметку по номеру"),
-            KeyboardButton(text="🗑 Удалить все заметки")
-        ],
-        [
-            KeyboardButton(text="⬅ Назад")
-        ]
+        [KeyboardButton(text="➕ Добавить заметку")],
+        [KeyboardButton(text="📋 Мои заметки")],
+        [KeyboardButton(text="🗑 Удалить заметки")],
+        [KeyboardButton(text="⬅ Назад")]
     ],
     resize_keyboard=True
 )
@@ -47,10 +46,8 @@ notes_keyboard = ReplyKeyboardMarkup(
 
 confirm_delete_notes_keyboard = ReplyKeyboardMarkup(
     keyboard=[
-        [
-            KeyboardButton(text="✅ Да, удалить"),
-            KeyboardButton(text="❌ Отмена")
-        ]
+        [KeyboardButton(text="✅ Да, удалить всё")],
+        [KeyboardButton(text="❌ Отмена")]
     ],
     resize_keyboard=True
 )
